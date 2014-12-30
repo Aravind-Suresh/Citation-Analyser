@@ -2,21 +2,20 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/jsoup-1.8.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/htmlunit-2.10.jar/htmlunit-2.10.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/org-apache-commons-codec.jar/org-apache-commons-codec.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/org.w3c.css.sac-1.3.0.jar/org.w3c.css.sac-1.3.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/org-apache-commons-logging.jar/org-apache-commons-logging.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/commons-lang3-3.0.jar/commons-lang3-3.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/org.apache.commons.io.jar/org.apache.commons.io.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/http-core-4.1.jar/http-core-4.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/httpcomponents-core-4.4-osgi-bin/httpcomponents-core-4.4/org.apache.httpcomponents.httpcore_4.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/httpmime.jar/httpmime.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/apache-httpcomponents-httpclient.jar/apache-httpcomponents-httpclient.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/apache-mime4j.jar/apache-mime4j.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/org.apache.commons.collections.jar/org.apache.commons.collections.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/htmlunit-core-js-2.5.jar/htmlunit-core-js-2.5.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/cssparser-0-9-4-fs.jar/cssparser-0-9-4-fs.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Arvind/Downloads/httpclient-4.2.1.jar/httpclient-4.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvind/workspace/cit_an/dependencies/apache-httpcomponents-httpclient.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvind/workspace/cit_an/dependencies/apache-mime4j.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvind/workspace/cit_an/dependencies/commons-lang3-3.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvind/workspace/cit_an/dependencies/cssparser-0-9-4-fs.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvind/workspace/cit_an/dependencies/htmlunit-2.10.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvind/workspace/cit_an/dependencies/htmlunit-core-js-2.5.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvind/workspace/cit_an/dependencies/httpclient-4.2.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvind/workspace/cit_an/dependencies/http-core-4.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvind/workspace/cit_an/dependencies/httpmime.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvind/workspace/cit_an/dependencies/jsoup-1.8.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvind/workspace/cit_an/dependencies/org.apache.commons.collections.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvind/workspace/cit_an/dependencies/org.apache.commons.io.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvind/workspace/cit_an/dependencies/org.w3c.css.sac-1.3.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvind/workspace/cit_an/dependencies/org-apache-commons-codec.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Arvind/workspace/cit_an/dependencies/org-apache-commons-logging.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
