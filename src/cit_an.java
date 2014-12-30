@@ -33,18 +33,36 @@ public class cit_an {
 	 * @param args
 	 */
 	
-	private static String getUrlSource(String url) throws IOException {
-        URL yahoo = new URL(url);
+	private static int hindex(int[] arr)
+	{
+	    int[] temp = new int[arr.length + 1];
+	    for (int i = 0; i < arr.length; i++) 
+	    {
+	        temp[Math.min(arr.length, arr[i])]++;
+	    }
+	    int sum = 0;
+	    for (int i = temp.length - 1; i >= 0; i--)
+	    {
+	        sum += temp[i];
+	        if (sum >= i)
+	            return i;
+	    }
+
+	    return 0;
+	}
+	
+	private static String getUrlSource(String str_url) throws IOException {
+        URL url = new URL(str_url);
         System.setProperty("http.agent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/28.0.1500.29 Safari/537.36");
-        URLConnection yc = yahoo.openConnection();
-        //yc.setRequestProperty("User-Agent", "Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_8; en-US) AppleWebKit/532.5 (KHTML, like Gecko) Chrome/4.0.249.0 Safari/532.5");
+        URLConnection yc = url.openConnection();
+
         BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream(), "UTF-8"));
         String inputLine;
-        StringBuilder a = new StringBuilder();
+        StringBuilder src_url = new StringBuilder();
         while ((inputLine = in.readLine()) != null)
-            a.append(inputLine);
+           src_url.append(inputLine);
         in.close();
-        return a.toString();
+        return src_url.toString();
     
     }
 	
@@ -62,7 +80,7 @@ public class cit_an {
 		final JRadioButton partb = new JRadioButton("Sort - year",false);
 		final JRadioButton partc = new JRadioButton("Sort - citations - range",false);
 		final JRadioButton partd = new JRadioButton("Sort - year - range",false);
-		final JRadioButton parte = new JRadioButton("Show - h-index and l-index",false);
+		final JRadioButton parte = new JRadioButton("Show - h-index and i-index",false);
 		final JRadioButton partf = new JRadioButton("Show - Cit Stats",false);
 		
 		ButtonGroup grp = new ButtonGroup();
@@ -385,9 +403,27 @@ public class cit_an {
 						
 						avgcite_p/=bookdata.size();
 						System.out.println("Avg citations per paper : " + avgcite_p);
-						System.out.println("-------------------------------");
-											
+						System.out.println("-------------------------------");			
 						
+					}
+					
+					else if(parte.isSelected())
+					{
+						int ind=0;
+						int i_ind=0;
+						int[] arr = new int[bookdata.size()];
+						for(book_data temph : bookdata)
+						{
+							arr[ind] = temph.cited;
+							ind++;
+							if(temph.cited>=10)
+							{
+								i_ind++;
+							}
+						}
+						System.out.println("h-index : " + hindex(arr));
+						System.out.println("i-index : " + i_ind);
+						System.out.println("-------------------------------");
 					}
 					
 				} catch (FailingHttpStatusCodeException e1) {
