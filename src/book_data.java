@@ -3,6 +3,7 @@ public class book_data {
 
 	String name;
 	int cited;
+	int year;
 	
 	public book_data()
 	{
@@ -10,9 +11,10 @@ public class book_data {
 		cited = 0;
 	}
 
-	public book_data(String name,int cited)
+	public book_data(String name,int cited,int year)
 	{
 		this.name = name;
 		this.cited = cited;
+		this.year = year;
 	}
 }

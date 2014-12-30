@@ -11,9 +11,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
 import org.jsoup.Jsoup;
@@ -53,6 +55,20 @@ public class cit_an {
 		final JTextField text_auth_name =  new JTextField("chetan bhagat",20);
 		JButton but_submit = new JButton("Submit");
 		final JLabel label_res = new JLabel("Search results..");
+		final JTextField text_range = new JTextField("2004-2009");
+		text_range.setEnabled(false);
+		
+		final JRadioButton parta = new JRadioButton("Sort - citations",true);
+		final JRadioButton partb = new JRadioButton("Sort - year",false);
+		final JRadioButton partc = new JRadioButton("Sort - citations - range",false);
+		final JRadioButton partd = new JRadioButton("Sort - year - range",false);
+		
+		ButtonGroup grp = new ButtonGroup();
+		grp.add(parta);
+		grp.add(partb);
+		grp.add(partc);
+		grp.add(partd);
+		
 		//label_res.setMinimumSize(new Dimension(100,100));
 		//label_res.setMaximumSize(new Dimension(100,100));
 		//label_res.setPreferredSize(new Dimension(100,100));
@@ -68,9 +84,13 @@ public class cit_an {
 				auth_name = auth_name.replaceAll(" ", "+");
 				String src;
 				ArrayList<book_data> bookdata = new ArrayList<book_data>();
+				ArrayList<book_data> bookdatatemp = new ArrayList<book_data>();
 				book_data temp = new book_data();
 				int cited;
+				int year;
+				int lastind;
 				String[] cited_split;
+				String[] year_split;
 				try {
 					/*final HtmlPage page_gsch = webClient.getPage("http://scholar.google.co.in/");
 					final HtmlForm form_gsch = page_gsch.getHtmlElementById("f");
@@ -88,6 +108,9 @@ public class cit_an {
 					for(Element book:booklinks)
 					{
 						book = book.getElementsByClass("gs_ri").first();
+						Element bookdet = book.getElementsByClass("gs_a").first();
+						Element bookdetbold = bookdet.getElementsByTag("b").first();
+								
 						Element bookhead = book.getElementsByTag("h3").first();
 						Element bookheadtype = bookhead.getElementsByTag("span").first();
 						bookheadtype = bookheadtype.getElementsByClass("gs_ct1").first();
@@ -101,13 +124,64 @@ public class cit_an {
 							//System.out.println(bookheadval.text());
 							cited_split = bookcited.text().split(" ");
 							cited = Integer.parseInt(cited_split[2]);
-							System.out.println(cited);
+							//System.out.println(cited);
 							
-							bookdata.add(new book_data(bookheadval.text(),cited));
+							String str_bookdet = bookdet.toString();
+							lastind = str_bookdet.lastIndexOf(bookdetbold.toString());
+							str_bookdet = str_bookdet.substring(lastind+1);
+							year_split = str_bookdet.split(" ");
+							year = Integer.parseInt(year_split[2]);
+
+							
+							bookdata.add(new book_data(bookheadval.text(),cited,year));
 						}
 						
 					}
+					
+					if(parta.isSelected())
+					{
+						text_range.setEnabled(false);
+						Collections.sort(bookdata,new Comparator<book_data>(){
+
+							@Override
+							public int compare(book_data arg0, book_data arg1) {
+								return arg1.cited - arg0.cited;
+							}
 						
+						});
+					}
+				
+					else if(partb.isSelected())
+					{
+						text_range.setEnabled(false);
+						Collections.sort(bookdata,new Comparator<book_data>(){
+
+							@Override
+							public int compare(book_data arg0, book_data arg1) {
+								return arg1.year - arg0.year;
+							}
+						
+						});
+					}
+					
+					else if(partc.isSelected())
+					{
+						text_range.setEnabled(true);
+						String range_year = text_range.getText();
+						String[] range_year_split = range_year.split("-");
+						int start_year = Integer.parseInt(range_year_split[0]);
+						int end_year = Integer.parseInt(range_year_split[1]);
+						
+						for(book_data tempyear : bookdata)
+						{
+							if(tempyear.year<start_year || tempyear.year>end_year)
+							{
+								//bookdata.remove(bookdata.indexOf(tempyear));
+							}
+							else bookdatatemp.add(tempyear);
+						}
+						
+						bookdata=bookdatatemp;
 						Collections.sort(bookdata,new Comparator<book_data>(){
 
 							@Override
@@ -117,16 +191,46 @@ public class cit_an {
 						
 						});
 						
+					}
+					
+					else if(partd.isSelected())
+					{
+						text_range.setEnabled(true);
+						String range_year = text_range.getText();
+						String[] range_year_split = range_year.split("-");
+						int start_year = Integer.parseInt(range_year_split[0]);
+						int end_year = Integer.parseInt(range_year_split[1]);
+						
+						for(book_data tempyear : bookdata)
+						{
+							if(tempyear.year<start_year || tempyear.year>end_year)
+							{
+								//bookdata.remove(bookdata.indexOf(tempyear));
+							}
+								else bookdatatemp.add(tempyear);
+						}
+						
+						bookdata=bookdatatemp;
+						Collections.sort(bookdata,new Comparator<book_data>(){
+
+							@Override
+							public int compare(book_data arg0, book_data arg1) {
+								return arg1.year - arg0.year;
+							}
+						
+						});
+					}
+				
 					String res="";
 					String resbook="";
 					
 					for(book_data templ:bookdata)
 					{
-						resbook = templ.name + "   " + " cited by " + templ.cited;
+						resbook = templ.name + "   " + " cited : " + templ.cited + "   " + "year : " + templ.year;
 						System.out.println(resbook);
 						res = res + resbook + "<br>";
 					}
-					//System.out.println(bookdata.toString());
+					System.out.println("-------------------------------");
 					label_res.setText("<html>" + res + "</html>");
 				
 				} catch (FailingHttpStatusCodeException e1) {
@@ -145,9 +249,16 @@ public class cit_an {
 		});
 		
 		JFrame frame_main = new JFrame("Cit_An");
-		frame_main.setLayout(new GridLayout(3,1));
+		frame_main.setLayout(new GridLayout(4,1));
 		
 		frame_main.add(text_auth_name);
+		frame_main.add(text_range);
+
+		frame_main.add(parta);
+		frame_main.add(partb);
+		frame_main.add(partc);
+		frame_main.add(partd);
+		
 		frame_main.add(label_res);
 		frame_main.add(but_submit);
 		
