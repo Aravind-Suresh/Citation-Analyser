@@ -62,12 +62,74 @@ public class cit_an {
 		final JRadioButton partb = new JRadioButton("Sort - year",false);
 		final JRadioButton partc = new JRadioButton("Sort - citations - range",false);
 		final JRadioButton partd = new JRadioButton("Sort - year - range",false);
+		final JRadioButton parte = new JRadioButton("Show - h-index and l-index",false);
+		final JRadioButton partf = new JRadioButton("Show - Cit Stats",false);
 		
 		ButtonGroup grp = new ButtonGroup();
 		grp.add(parta);
 		grp.add(partb);
 		grp.add(partc);
 		grp.add(partd);
+		grp.add(parte);
+		grp.add(partf);
+		
+		parta.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				text_range.setEnabled(false);
+			}
+			
+		});
+		
+		partb.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				text_range.setEnabled(false);
+			}
+			
+		});
+		
+		partc.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				text_range.setEnabled(true);
+			}
+			
+		});
+		
+		partd.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				text_range.setEnabled(true);
+			}
+			
+		});
+		parte.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				text_range.setEnabled(false);
+			}
+			
+		});
+		partf.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				text_range.setEnabled(false);
+			}
+			
+		});
 		
 		//label_res.setMinimumSize(new Dimension(100,100));
 		//label_res.setMaximumSize(new Dimension(100,100));
@@ -140,7 +202,7 @@ public class cit_an {
 					
 					if(parta.isSelected())
 					{
-						text_range.setEnabled(false);
+						//text_range.setEnabled(false);
 						Collections.sort(bookdata,new Comparator<book_data>(){
 
 							@Override
@@ -149,11 +211,23 @@ public class cit_an {
 							}
 						
 						});
+						String res="";
+						String resbook="";
+						
+						for(book_data templ:bookdata)
+						{
+							resbook = templ.name + "   " + " cited : " + templ.cited + "   " + "year : " + templ.year;
+							System.out.println(resbook);
+							res = res + resbook + "<br>";
+						}
+						System.out.println("-------------------------------");
+						label_res.setText("<html>" + res + "</html>");
+					
 					}
 				
 					else if(partb.isSelected())
 					{
-						text_range.setEnabled(false);
+						//text_range.setEnabled(false);
 						Collections.sort(bookdata,new Comparator<book_data>(){
 
 							@Override
@@ -162,11 +236,24 @@ public class cit_an {
 							}
 						
 						});
+						String res="";
+						String resbook="";
+						
+						for(book_data templ:bookdata)
+						{
+							resbook = templ.name + "   " + " cited : " + templ.cited + "   " + "year : " + templ.year;
+							System.out.println(resbook);
+							res = res + resbook + "<br>";
+						}
+						System.out.println("-------------------------------");
+						label_res.setText("<html>" + res + "</html>");
+					
 					}
 					
 					else if(partc.isSelected())
 					{
-						text_range.setEnabled(true);
+						//text_range.setEnabled(true);
+						bookdatatemp.clear();
 						String range_year = text_range.getText();
 						String[] range_year_split = range_year.split("-");
 						int start_year = Integer.parseInt(range_year_split[0]);
@@ -190,12 +277,25 @@ public class cit_an {
 							}
 						
 						});
+						String res="";
+						String resbook="";
+						
+						for(book_data templ:bookdata)
+						{
+							resbook = templ.name + "   " + " cited : " + templ.cited + "   " + "year : " + templ.year;
+							System.out.println(resbook);
+							res = res + resbook + "<br>";
+						}
+						System.out.println("-------------------------------");
+						label_res.setText("<html>" + res + "</html>");
+					
 						
 					}
 					
 					else if(partd.isSelected())
 					{
-						text_range.setEnabled(true);
+						//text_range.setEnabled(true);
+						bookdatatemp.clear();
 						String range_year = text_range.getText();
 						String[] range_year_split = range_year.split("-");
 						int start_year = Integer.parseInt(range_year_split[0]);
@@ -219,20 +319,77 @@ public class cit_an {
 							}
 						
 						});
-					}
-				
-					String res="";
-					String resbook="";
+						String res="";
+						String resbook="";
+						
+						for(book_data templ:bookdata)
+						{
+							resbook = templ.name + "   " + " cited : " + templ.cited + "   " + "year : " + templ.year;
+							System.out.println(resbook);
+							res = res + resbook + "<br>";
+						}
+						System.out.println("-------------------------------");
+						label_res.setText("<html>" + res + "</html>");
 					
-					for(book_data templ:bookdata)
-					{
-						resbook = templ.name + "   " + " cited : " + templ.cited + "   " + "year : " + templ.year;
-						System.out.println(resbook);
-						res = res + resbook + "<br>";
 					}
-					System.out.println("-------------------------------");
-					label_res.setText("<html>" + res + "</html>");
 				
+					else if(partf.isSelected())
+					{
+						//bookdatatemp.clear();
+						int avgcite_p=0;
+						//ArrayList<book_data> avgcite_y = new ArrayList<book_data>();
+						int avgcite_y=0;
+						int i=-1;
+						int tempa = 0;
+						int flag=1;
+						
+						Collections.sort(bookdata,new Comparator<book_data>(){
+
+							@Override
+							public int compare(book_data arg0, book_data arg1) {
+								return arg1.year - arg0.year;
+							}
+						
+						});
+						System.out.println("Citation Statistics : ");
+						System.out.println("Total citations in each year : ");
+						for(book_data book_stat : bookdata)
+						{
+							flag=1;
+							avgcite_p+=book_stat.cited;
+							if(i==-1)
+							{
+								tempa = book_stat.year;
+								i=1;
+							}
+							
+							if(i==1)
+							{
+								//avgcite_y.add(book_stat);
+								avgcite_y+=book_stat.cited;
+							}
+							if(book_stat.year==tempa && bookdata.get(1+bookdata.indexOf(book_stat)).year!=tempa)
+							{
+								i=0;
+								System.out.println(tempa + " : " + avgcite_y);
+								//flag=0;
+							}
+							if(i==0 && flag==1)
+							{
+								tempa = book_stat.year;
+								avgcite_y+=book_stat.cited;
+								i=1;
+							}
+							
+						}
+						
+						avgcite_p/=bookdata.size();
+						System.out.println("Avg citations per paper : " + avgcite_p);
+						System.out.println("-------------------------------");
+											
+						
+					}
+					
 				} catch (FailingHttpStatusCodeException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -249,7 +406,7 @@ public class cit_an {
 		});
 		
 		JFrame frame_main = new JFrame("Cit_An");
-		frame_main.setLayout(new GridLayout(4,1));
+		frame_main.setLayout(new GridLayout(5,1));
 		
 		frame_main.add(text_auth_name);
 		frame_main.add(text_range);
@@ -258,6 +415,8 @@ public class cit_an {
 		frame_main.add(partb);
 		frame_main.add(partc);
 		frame_main.add(partd);
+		frame_main.add(parte);
+		frame_main.add(partf);
 		
 		frame_main.add(label_res);
 		frame_main.add(but_submit);
