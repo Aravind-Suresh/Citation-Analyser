@@ -4,7 +4,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,6 +32,9 @@ import org.jsoup.select.Elements;
 
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gnostice.pdfone.PdfDocument;
+import com.gnostice.pdfone.PdfException;
+import com.gnostice.pdfone.PdfReader;
 
 
 public class cit_an {
@@ -71,23 +76,24 @@ public class cit_an {
 
         final WebClient webClient = new WebClient();
         final JTextField text_auth_name = new JTextField("chetan bhagat", 20);
-        
+
         JButton but_submit = new JButton("Submit");
 
         JButton but_show = new JButton("Show citations");
-        
+
         final JLabel label_res = new JLabel("Search results..");
+        //final JTextField label_res = new JTextField("Search results");
         final JTextField text_range = new JTextField("2004-2009");
         text_range.setEnabled(false);
-        
+
         JPanel panel1 = new JPanel();
         JPanel panel2 = new JPanel();
-        
+
         TitledBorder title;
         title = BorderFactory.createTitledBorder("Select operation");
         panel1.setBorder(title);
-        panel1.setLayout(new GridLayout(3,3));
-        
+        panel1.setLayout(new GridLayout(3, 3));
+
         TitledBorder title1;
         title1 = BorderFactory.createTitledBorder("Select mode");
         panel2.setBorder(title1);
@@ -105,13 +111,13 @@ public class cit_an {
         panel1.add(partd);
         panel1.add(parte);
         panel1.add(partf);
-        
+
         final JRadioButton auth = new JRadioButton("Search for Author", true);
         final JRadioButton jour = new JRadioButton("Search for Journal", false);
 
         panel2.add(auth);
         panel2.add(jour);
-        
+
         ButtonGroup grp = new ButtonGroup();
         grp.add(parta);
         grp.add(partb);
@@ -411,7 +417,7 @@ public class cit_an {
                             avgcite_p /= bookdata.size();
                             System.out.println("Avg citations per paper : " + avgcite_p);
                             System.out.println("-------------------------------");
-                            label_res.setText("<html>" + "Citation Statistics : " +"<br>" + "Total citations in each year : " + "<br>"+ tempa + " : " + avgcite_y  + "<br>" + "Avg citations per paper : " + avgcite_p + "</html>");
+                            label_res.setText("<html>" + "Citation Statistics : " + "<br>" + "Total citations in each year : " + "<br>" + tempa + " : " + avgcite_y + "<br>" + "Avg citations per paper : " + avgcite_p + "</html>");
 
                         } else if (parte.isSelected()) {
                             int ind = 0;
@@ -427,8 +433,8 @@ public class cit_an {
                             System.out.println("h-index : " + hindex(arr));
                             System.out.println("i-index : " + i_ind);
                             System.out.println("-------------------------------");
-                            label_res.setText("<html>"+"h-index : " + hindex(arr) + "<br>" + "i-index : " + i_ind + "</html>" );
-                            
+                            label_res.setText("<html>" + "h-index : " + hindex(arr) + "<br>" + "i-index : " + i_ind + "</html>");
+
                         }
                     } else if (jour.isSelected()) {
                         bookdata.clear();
@@ -612,7 +618,7 @@ public class cit_an {
                             avgcite_p /= bookdata.size();
                             System.out.println("Avg citations per paper : " + avgcite_p);
                             System.out.println("-------------------------------");
-                            label_res.setText("<html>" + "Citation Statistics : " +"<br>" + "Total citations in each year : " + "<br>"+ tempa + " : "  + "<br>" + avgcite_y + "Avg citations per paper : " + avgcite_p + "</html>");
+                            label_res.setText("<html>" + "Citation Statistics : " + "<br>" + "Total citations in each year : " + "<br>" + tempa + " : " + "<br>" + avgcite_y + "Avg citations per paper : " + avgcite_p + "</html>");
 
 
                         } else if (parte.isSelected()) {
@@ -629,8 +635,8 @@ public class cit_an {
                             System.out.println("h-index : " + hindex(arr));
                             System.out.println("i-index : " + i_ind);
                             System.out.println("-------------------------------");
-                            
-                            label_res.setText("<html>" + "h-index : " + hindex(arr) + "<br>" + "i-index : " + i_ind + "</html>" );
+
+                            label_res.setText("<html>" + "h-index : " + hindex(arr) + "<br>" + "i-index : " + i_ind + "</html>");
                         }
 
 
@@ -651,65 +657,127 @@ public class cit_an {
             }
 
         });
-        
-        but_show.addActionListener(new ActionListener(){
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				// TODO Auto-generated method stub
-				String auth_name = text_auth_name.getText();
-				auth_name = auth_name.replaceAll(" ", "+");
-				String src;
-				try {
-					src = getUrlSource("http://scholar.google.co.in/scholar?hl=en&q=" + auth_name + "&btnG=").toString();
-				
-                Document doc = Jsoup.parse(src);
-                Element booklinkstemp = doc.getElementsByTag("html").first().getElementsByTag("body").first().getElementById("gs_top").getElementById("gs_bdy").getElementById("gs_res_bdy").getElementById("gs_ccl");
-                Elements booklinks = booklinkstemp.getElementsByClass("gs_r"); //.first().getElementsByClass("gs_ri");
-                
-				for (Element book: booklinks) {
-                    book = book.getElementsByClass("gs_ri").first();
-                    //Element bookhead = book.getElementsByTag("h3").first();
-                    //Element bookheadval = bookhead.getAllElements().last();
-                    Element bookcited = book.getElementsByClass("gs_fl").first().getElementsByTag("a").first();
-                    System.out.println(bookcited.toString());
-				}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-        	
+        but_show.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent arg0) {
+                // TODO Auto-generated method stub
+                String auth_name = text_auth_name.getText();
+                auth_name = auth_name.replaceAll(" ", "+");
+                String src;
+                String final_text = "";
+                try {
+                    src = getUrlSource("http://scholar.google.co.in/scholar?hl=en&q=" + auth_name + "&btnG=").toString();
+
+                    Document doc = Jsoup.parse(src);
+                    Element booklinkstemp = doc.getElementsByTag("html").first().getElementsByTag("body").first().getElementById("gs_top").getElementById("gs_bdy").getElementById("gs_res_bdy").getElementById("gs_ccl");
+                    Elements booklinks = booklinkstemp.getElementsByClass("gs_r"); //.first().getElementsByClass("gs_ri");
+
+                    for (Element book: booklinks) {
+                        book = book.getElementsByClass("gs_ri").first();
+                        Element bookhead = book.getElementsByTag("h3").first();
+                        //Element bookheadval = bookhead.getAllElements().last();
+                        Element bookcited = book.getElementsByClass("gs_fl").first().getElementsByTag("a").first();
+                        //System.out.println(bookcited.toString());
+                        String link_cite = "http://scholar.google.co.in" + bookcited.attr("href").toString();
+
+                        Document doct = Jsoup.parse(getUrlSource(link_cite));
+                        Element booklinkstemp1 = doct.getElementsByTag("html").first().getElementsByTag("body").first().getElementById("gs_top").getElementById("gs_bdy").getElementById("gs_res_bdy").getElementById("gs_ccl");
+                        Elements booklinks1 = booklinkstemp1.getElementsByClass("gs_r"); //.first().getElementsByClass("gs_ri");
+                        int flag = 1;
+                        /* for(Element book1:booklinks1)
+                    {
+                    	 book1 = book1.getElementsByClass("gs_ri").first();
+                         Element bookhead1 = book1.getElementsByTag("h3").first();      
+                         Element ele = bookhead1.getElementsByTag("span").first();
+                         if(ele!=null)
+                         {
+                         ele = ele.getElementsByClass("gs_ctc").first();
+                         if(ele!=null)	ele = ele.getElementsByClass("gs_ct1").first();
+                         //System.out.println(ele);
+                         if(ele!=null && ele.text().equals("[PDF]"))
+                         {
+                           	 System.out.println(ele);
+                           	 String pdf_disp="";
+                           	 byte[] ch = new byte[1024];
+                           	 String linkpdf = bookhead1.getAllElements().last().attr("href");
+                           	 URL url1 = new URL(linkpdf);
+                           	 URLConnection urlConn = url1.openConnection();
+                           	 //FileOutputStream fos1 = new FileOutputStream("download.pdf");
+                           	 InputStream is1 = url1.openStream();
+                           	 while(is1.read(ch)!= -1)
+                           	 {
+                           		 pdf_disp += ch.toString();
+                           	 }
+                           	 label_res.setText(pdf_disp);
+                           	 if(flag==1) break;
+                           	 /*byte[] ba1 = new byte[1024];
+                           	 int baLength;
+                           	 while ((baLength = is1.read(ba1)) != -1) {
+                                fos1.write(ba1, 0, baLength);
+                           	 }
+                           	 fos1.flush();
+                           	 fos1.close();
+                           	 is1.close();
+                           	PdfReader r = PdfReader.fileReader(linkpdf);
+                           	PdfDocument docp = new PdfDocument(r);
+                            try {
+                            	label_res.setText(docp.toString());
+                            	if(flag==1) break;
+                            
+                            } catch (Exception e) {
+                             e.printStackTrace(); }
+                   
+                           	
+                         }
+                         }
+                    }*/
+
+                        /*if()
+                    {
+                    	Document doct = Jsoup.parse(getUrlSource(link_cite));
+                    	label_res.setText(doct.toString());
+                    }*/
+
+                    }
+                    //label_res.setText("<html>" + final_text + "</html>");
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+            }
+
         });
-        
+
 
         JFrame frame_main = new JFrame("Cit_An");
         frame_main.setLayout(new GridLayout(7, 1));
         frame_main.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        
+
         JPanel panelin = new JPanel();
         panelin.setSize(200, 50);
-        panelin.setLayout(new GridLayout(1,1));
-        text_auth_name.setSize(100,50);
-        text_range.setSize(100,50);
-        text_range.setMaximumSize(new Dimension(100,50));
+        panelin.setLayout(new GridLayout(1, 1));
+        text_auth_name.setSize(100, 50);
+        text_range.setSize(100, 50);
+        text_range.setMaximumSize(new Dimension(100, 50));
         panelin.add(text_auth_name);
         panelin.add(text_range);
-        
-        frame_main.add(panelin,BorderLayout.PAGE_START);
-        
+
+        frame_main.add(panelin, BorderLayout.PAGE_START);
+
         JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayout(1,1));
+        panel3.setLayout(new GridLayout(1, 1));
         panel3.add(panel1);
         panel3.add(panel2);
-        
+
         frame_main.add(panel3);
-        
+
         JPanel panellab = new JPanel();
         label_res.setAutoscrolls(true);
         panellab.add(label_res);
         frame_main.add(panellab);
-        
+
         JPanel panelsub = new JPanel();
         panelsub.add(but_submit);
         panelsub.add(but_show);
