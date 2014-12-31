@@ -73,7 +73,8 @@ public class cit_an {
         final JTextField text_auth_name = new JTextField("chetan bhagat", 20);
         
         JButton but_submit = new JButton("Submit");
-        but_submit.setPreferredSize(new Dimension(40,40));
+
+        JButton but_show = new JButton("Show citations");
         
         final JLabel label_res = new JLabel("Search results..");
         final JTextField text_range = new JTextField("2004-2009");
@@ -410,6 +411,7 @@ public class cit_an {
                             avgcite_p /= bookdata.size();
                             System.out.println("Avg citations per paper : " + avgcite_p);
                             System.out.println("-------------------------------");
+                            label_res.setText("<html>" + "Citation Statistics : " +"<br>" + "Total citations in each year : " + "<br>"+ tempa + " : " + avgcite_y  + "<br>" + "Avg citations per paper : " + avgcite_p + "</html>");
 
                         } else if (parte.isSelected()) {
                             int ind = 0;
@@ -425,6 +427,8 @@ public class cit_an {
                             System.out.println("h-index : " + hindex(arr));
                             System.out.println("i-index : " + i_ind);
                             System.out.println("-------------------------------");
+                            label_res.setText("<html>"+"h-index : " + hindex(arr) + "<br>" + "i-index : " + i_ind + "</html>" );
+                            
                         }
                     } else if (jour.isSelected()) {
                         bookdata.clear();
@@ -608,6 +612,8 @@ public class cit_an {
                             avgcite_p /= bookdata.size();
                             System.out.println("Avg citations per paper : " + avgcite_p);
                             System.out.println("-------------------------------");
+                            label_res.setText("<html>" + "Citation Statistics : " +"<br>" + "Total citations in each year : " + "<br>"+ tempa + " : "  + "<br>" + avgcite_y + "Avg citations per paper : " + avgcite_p + "</html>");
+
 
                         } else if (parte.isSelected()) {
                             int ind = 0;
@@ -623,6 +629,8 @@ public class cit_an {
                             System.out.println("h-index : " + hindex(arr));
                             System.out.println("i-index : " + i_ind);
                             System.out.println("-------------------------------");
+                            
+                            label_res.setText("<html>" + "h-index : " + hindex(arr) + "<br>" + "i-index : " + i_ind + "</html>" );
                         }
 
 
@@ -642,9 +650,38 @@ public class cit_an {
 
             }
 
-
-
         });
+        
+        but_show.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				String auth_name = text_auth_name.getText();
+				auth_name = auth_name.replaceAll(" ", "+");
+				String src;
+				try {
+					src = getUrlSource("http://scholar.google.co.in/scholar?hl=en&q=" + auth_name + "&btnG=").toString();
+				
+                Document doc = Jsoup.parse(src);
+                Element booklinkstemp = doc.getElementsByTag("html").first().getElementsByTag("body").first().getElementById("gs_top").getElementById("gs_bdy").getElementById("gs_res_bdy").getElementById("gs_ccl");
+                Elements booklinks = booklinkstemp.getElementsByClass("gs_r"); //.first().getElementsByClass("gs_ri");
+                
+				for (Element book: booklinks) {
+                    book = book.getElementsByClass("gs_ri").first();
+                    //Element bookhead = book.getElementsByTag("h3").first();
+                    //Element bookheadval = bookhead.getAllElements().last();
+                    Element bookcited = book.getElementsByClass("gs_fl").first().getElementsByTag("a").first();
+                    System.out.println(bookcited.toString());
+				}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+        	
+        });
+        
 
         JFrame frame_main = new JFrame("Cit_An");
         frame_main.setLayout(new GridLayout(7, 1));
@@ -675,7 +712,8 @@ public class cit_an {
         
         JPanel panelsub = new JPanel();
         panelsub.add(but_submit);
-        frame_main.add(panelsub,BorderLayout.SOUTH);
+        panelsub.add(but_show);
+        frame_main.add(panelsub);
 
         frame_main.pack();
         frame_main.setVisible(true);
