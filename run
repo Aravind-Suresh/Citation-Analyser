@@ -1,0 +1,1 @@
+java -cp "dependencies/*:src" cit_an

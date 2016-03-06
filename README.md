@@ -1,6 +1,28 @@
 # Citation-Analyser
 
-## A citation analyser ( parsing Google Scholar ) in Java
+* A simple GUI to analyse citations for a particular author/journal by parsing Google Scholar search results
 
-* All the necessary dependencies are included
-* It is a standalone Java application
+* Computes H-index and I-index
+
+* Displays consolidated stats for each query
+
+## Trial
+
+* First clone the repository.
+
+* To compile,
+
+```
+$ ./compile
+```
+
+* To run,
+
+```
+$ ./run
+```
+For running in Windows, `:` in `run` should be changed to `;`
+
+## Dependencies
+
+* All the necessary dependencies are included locally
